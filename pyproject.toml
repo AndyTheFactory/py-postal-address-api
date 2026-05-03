@@ -1,0 +1,22 @@
+[project]
+name = "postal-address"
+version = "0.1.0"
+description = "Country-aware wrapper for AddressPerfect RapidAPI postal and street search endpoints."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "requests>=2.32.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0.0",
+]
+
+[build-system]
+requires = ["hatchling>=1.25.0"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
