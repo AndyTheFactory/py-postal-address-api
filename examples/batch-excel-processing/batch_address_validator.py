@@ -128,20 +128,20 @@ def validate_batch(input_file: str, output_file: str, api_key: str | None = None
                     zip_code=postal_code,
                     city=city,
                 )
-                if result and result["Flag"] in (1, 2):
+                if result and result.Flag in (1, 2):
                     out_row.extend(
                         [
                             "valid",
-                            result.get("Street", street),
-                            result.get("PostalCode", postal_code),
-                            result.get("City", city),
+                            result.Street or street,
+                            result.Zipcode or postal_code,
+                            result.City or city,
                             "",
                         ]
                     )
                     fill = valid_fill
                     valid_count += 1
                 elif result:
-                    out_row.extend(["invalid", street, postal_code, city, result["FlagText"]])
+                    out_row.extend(["invalid", street, postal_code, city, result.FlagText or "Address not valid"])
                     fill = invalid_fill
                 else:
                     out_row.extend(["invalid", street, postal_code, city, "API Call failed"])

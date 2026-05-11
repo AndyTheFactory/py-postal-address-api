@@ -32,9 +32,9 @@ class UserRegistrationView(CreateView):
                 city=form.cleaned_data.get("city"),
             )
             if validation:
-                user.street = validation.get("Street", form.cleaned_data.get("address"))
-                user.postal_code = validation.get("PostalCode", form.cleaned_data.get("postal_code"))
-                user.city = validation.get("City", form.cleaned_data.get("city"))
+                user.street = validation.Street or form.cleaned_data.get("address")
+                user.postal_code = validation.Zipcode or form.cleaned_data.get("postal_code")
+                user.city = validation.City or form.cleaned_data.get("city")
         except PostalAddressError:
             pass
 
@@ -69,14 +69,13 @@ def autocomplete_swiss_address(request):
         suggestions = []
         if isinstance(results, list):
             for item in results[:10]:  # Limit to 10 suggestions
-                if isinstance(item, dict):
-                    suggestion = {
-                        "label": item.get("Street") or str(item),
-                        "value": item.get("Street") or str(item),
-                        "postal_code": item.get("PostalCode", ""),
-                        "city": item.get("City", ""),
-                    }
-                    suggestions.append(suggestion)
+                suggestion = {
+                    "label": item.Street,
+                    "value": item.Street,
+                    "postal_code": item.Zipcode,
+                    "city": item.City,
+                }
+                suggestions.append(suggestion)
 
         return JsonResponse({"results": suggestions})
 

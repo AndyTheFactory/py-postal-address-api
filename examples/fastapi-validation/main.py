@@ -102,9 +102,9 @@ def validate_swiss_address(address: AddressData) -> AddressValidationResult:
         if result:
             return AddressValidationResult(
                 status="valid",
-                normalized_street=result.get("Street", address.street),
-                normalized_postal_code=result.get("PostalCode", address.postal_code),
-                normalized_city=result.get("City", address.city),
+                normalized_street=result.Street or address.street,
+                normalized_postal_code=result.Zipcode or address.postal_code,
+                normalized_city=result.City or address.city,
                 message="Address validated successfully",
             )
         else:
@@ -178,15 +178,14 @@ async def autocomplete_swiss_address(q: str) -> AutocompleteResponse:
         suggestions = []
         if isinstance(results, list):
             for item in results[:10]:  # Limit to 10 suggestions
-                if isinstance(item, dict):
-                    suggestion = AutocompleteResult(
-                        label=item.get("Street", ""),
-                        street=item.get("Street", ""),
-                        postal_code=item.get("PostalCode", ""),
-                        city=item.get("City", ""),
-                    )
-                    if suggestion.label:
-                        suggestions.append(suggestion)
+                suggestion = AutocompleteResult(
+                    label=item.Street,
+                    street=item.Street,
+                    postal_code=item.Zipcode,
+                    city=item.City,
+                )
+                if suggestion.label:
+                    suggestions.append(suggestion)
 
         return AutocompleteResponse(suggestions=suggestions)
 

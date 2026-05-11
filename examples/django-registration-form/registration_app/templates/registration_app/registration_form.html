@@ -77,7 +77,7 @@
                             {{ form.address }}
                             <div class="autocomplete-dropdown" id="streetDropdown"></div>
                         </div>
-                        <div class="field-help">Street suggestions are narrowed by ZIP and city.</div>
+                        <div class="field-help">Street suggestions are narrowed by ZIP and city; with ZIP or city filled, suggestions start from 1 letter.</div>
                     </div>
 
                     <div class="mb-3">
@@ -123,7 +123,8 @@
                 input.on('input', function() {
                     clearTimeout(timer);
                     const query = $(this).val();
-                    if (!query || query.length < minLen) {
+                    const effectiveMinLen = typeof minLen === 'function' ? minLen() : minLen;
+                    if (!query || query.length < effectiveMinLen) {
                         dropdown.empty();
                         return;
                     }
@@ -141,8 +142,8 @@
                 zipInput,
                 zipDropdown,
                 '/api/ch-address/autocomplete-zip/',
-                2,
-                () => ({ city: cityInput.val() }),
+                () => cityInput.val().trim() ? 0 : 2,
+                () => ({ city: cityInput.val(), street: streetInput.val() }),
                 (result) => {
                     zipInput.val(result.value || '');
                     if (result.city) {
@@ -156,8 +157,8 @@
                 cityInput,
                 cityDropdown,
                 '/api/ch-address/autocomplete-city/',
-                3,
-                () => ({ zip: zipInput.val() }),
+                () => zipInput.val().trim() ? 0 : 3,
+                () => ({ zip: zipInput.val(), street: streetInput.val() }),
                 (result) => {
                     cityInput.val(result.value || '');
                     if (result.postal_code) {
@@ -171,7 +172,7 @@
                 streetInput,
                 streetDropdown,
                 '/api/ch-address/autocomplete-street/',
-                3,
+                () => (zipInput.val().trim() || cityInput.val().trim()) ? 0 : 2,
                 () => ({ zip: zipInput.val(), city: cityInput.val() }),
                 (result) => {
                     streetInput.val(result.value || '');

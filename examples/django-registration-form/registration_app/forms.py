@@ -2,7 +2,7 @@
 
 from django import forms
 
-from postal_address import PostalAddressClient, PostalAddressError
+from postal_address import PostalAddressClient
 
 from .models import User
 
@@ -80,22 +80,18 @@ class UserRegistrationForm(forms.ModelForm):
         if not street or not postal_code or not city:
             return cleaned_data
 
-        try:
-            client = PostalAddressClient(country="ch")
-            result = client.validate_address(
-                street=street,
-                house_number=house_number,
-                zip_code=postal_code,
-                city=city,
-            )
-            if not isinstance(result, dict):
-                raise forms.ValidationError("Address could not be validated.")
-
-            # Keep normalized values for persistence.
-            cleaned_data["address"] = result.get("Street", street)
-            cleaned_data["postal_code"] = result.get("PostalCode", postal_code)
-            cleaned_data["city"] = result.get("City", city)
-        except PostalAddressError as exc:
-            raise forms.ValidationError(f"Address validation error: {exc}") from exc
+        client = PostalAddressClient(country="ch")
+        result = client.validate_address(
+            street=street,
+            house_number=house_number,
+            zip_code=postal_code,
+            city=city,
+        )
+        if result and result.Flag in (0, 3):
+            raise forms.ValidationError("Address is invalid,please check your input.")
+        # Keep normalized values for persistence.
+        cleaned_data["address"] = result.Street or street
+        cleaned_data["postal_code"] = result.Zipcode or postal_code
+        cleaned_data["city"] = result.City or city
 
         return cleaned_data
