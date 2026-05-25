@@ -81,7 +81,13 @@ def validate_batch(input_file: str, output_file: str, api_key: str | None = None
     for cell in ws_in[1]:
         if cell.value:
             headers.append(cell.value)
-    headers.extend(["ValidationStatus", "NormalizedStreet", "NormalizedPostalCode", "NormalizedCity", "ErrorMessage"])
+    headers.extend([
+        "ValidationStatus",
+        "NormalizedStreet",
+        "NormalizedPostalCode",
+        "NormalizedCity",
+        "ErrorMessage",
+    ])
     ws_out.append(headers)
 
     # Color codes for output
@@ -129,19 +135,23 @@ def validate_batch(input_file: str, output_file: str, api_key: str | None = None
                     city=city,
                 )
                 if result and result.Flag in (1, 2):
-                    out_row.extend(
-                        [
-                            "valid",
-                            result.Street or street,
-                            result.Zipcode or postal_code,
-                            result.City or city,
-                            "",
-                        ]
-                    )
+                    out_row.extend([
+                        "valid",
+                        result.Street or street,
+                        result.Zipcode or postal_code,
+                        result.City or city,
+                        "",
+                    ])
                     fill = valid_fill
                     valid_count += 1
                 elif result:
-                    out_row.extend(["invalid", street, postal_code, city, result.FlagText or "Address not valid"])
+                    out_row.extend([
+                        "invalid",
+                        street,
+                        postal_code,
+                        city,
+                        result.FlagText or "Address not valid",
+                    ])
                     fill = invalid_fill
                 else:
                     out_row.extend(["invalid", street, postal_code, city, "API Call failed"])
@@ -170,7 +180,7 @@ def validate_batch(input_file: str, output_file: str, api_key: str | None = None
             try:
                 if len(str(cell.value)) > max_length:
                     max_length = len(str(cell.value))
-            except:
+            except Exception:
                 pass
         adjusted_width = min(max_length + 2, 50)
         ws_out.column_dimensions[column_letter].width = adjusted_width

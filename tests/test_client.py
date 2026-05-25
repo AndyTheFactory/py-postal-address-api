@@ -56,12 +56,14 @@ class DummySession:
         self.calls = []
 
     def get(self, url, params=None, headers=None, timeout=None):
-        self.calls.append({
-            "url": url,
-            "params": params,
-            "headers": headers,
-            "timeout": timeout,
-        })
+        self.calls.append(
+            {
+                "url": url,
+                "params": params,
+                "headers": headers,
+                "timeout": timeout,
+            }
+        )
         return self.response
 
 
@@ -146,7 +148,9 @@ def test_validate_address_returns_address_response():
     session = DummySession(DummyResponse(200, raw))
     client = PostalAddressClient(country="ch", api_key="k", session=session)
 
-    result = client.validate_address(street="Bahnhofstrasse", house_number="1", zip_code="8001", city="Zurich")
+    result = client.validate_address(
+        street="Bahnhofstrasse", house_number="1", zip_code="8001", city="Zurich"
+    )
 
     assert isinstance(result, AddressResponse)
     assert result.Street == "Bahnhofstrasse"

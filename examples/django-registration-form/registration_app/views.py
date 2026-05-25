@@ -36,6 +36,8 @@ class UserRegistrationView(CreateView):
 
 
 class RegistrationSuccessView(TemplateView):
+    """View for successful user registration."""
+
     template_name = "registration_app/registration_success.html"
 
 

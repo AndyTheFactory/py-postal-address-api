@@ -24,6 +24,8 @@ users_db: dict[str, dict[str, Any]] = {}
 
 
 class AddressData(BaseModel):
+    """Data model for Swiss address fields."""
+
     street: str
     house_number: str | None = None
     postal_code: str
@@ -31,6 +33,8 @@ class AddressData(BaseModel):
 
 
 class UserRegistrationRequest(BaseModel):
+    """Data model for user registration request."""
+
     email: EmailStr
     first_name: str
     last_name: str
@@ -41,6 +45,8 @@ class UserRegistrationRequest(BaseModel):
 
 
 class AddressValidationResult(BaseModel):
+    """Data model for Swiss address validation result."""
+
     status: str  # "valid", "invalid", or "error"
     normalized_street: str | None = None
     normalized_postal_code: str | None = None
@@ -49,6 +55,8 @@ class AddressValidationResult(BaseModel):
 
 
 class UserResponse(BaseModel):
+    """Data model for user response."""
+
     user_id: str
     email: str
     first_name: str
@@ -61,6 +69,8 @@ class UserResponse(BaseModel):
 
 
 class AutocompleteResult(BaseModel):
+    """Data model for address autocomplete result."""
+
     label: str
     street: str
     postal_code: str
@@ -68,6 +78,8 @@ class AutocompleteResult(BaseModel):
 
 
 class AutocompleteResponse(BaseModel):
+    """Data model for autocomplete response."""
+
     suggestions: list[AutocompleteResult]
 
 

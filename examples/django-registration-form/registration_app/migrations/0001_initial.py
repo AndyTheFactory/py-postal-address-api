@@ -4,6 +4,8 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+    """Initial migration for the User model in the registration_app."""
+
     initial = True
 
     dependencies = []

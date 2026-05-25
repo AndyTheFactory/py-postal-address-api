@@ -1,7 +1,7 @@
 [project]
 name = "postal-address-api"
 version = "0.1.0"
-description = "Country-aware wrapper for AddressPerfect RapidAPI postal and street search endpoints."
+description = "Country-aware Python client for AddressPerfect on RapidAPI. Offering postal code and street search, address normalization, and country-specific formatting. Lightweight, requests-based, and easy to integrate into applications and services."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
@@ -32,7 +32,7 @@ testpaths = ["tests"]
 addopts = "-q"
 
 [tool.ruff]
-line-length = 100
+line-length = 120
 target-version = "py312"
 
 [tool.ruff.lint]

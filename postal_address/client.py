@@ -93,8 +93,10 @@ class PostalAddressClient:
 
     def autocomplete(self, query: str) -> list[AddressResponse]:
         """Search addresses with unstructured full-text query.
+
         Args:
             query: Free-form search string (e.g. "Bahnhofstr 1 Zurich")
+
         Returns:
             List of matching address objects with details.
         """
@@ -103,35 +105,44 @@ class PostalAddressClient:
 
     def get_street_list(self, street: str, zip_code: str | None = None, city: str | None = None) -> list[str]:
         """Get a list of matching streets.
+
         Args:
             street: Partial Street name (prefix) to search for.
             zip_code: Optional zip code to narrow the search.
             city: Optional city name to narrow the search.
+
         Returns:
             List of matching street names.
         """
         params = {"street": street, "zip": zip_code, "city": city}
-        return self._get("/getstreetlist", params)
+        res: list[str] = self._get("/getstreetlist", params)
+        return res
 
     def get_city_list(self, city: str, zip_code: str | None = None) -> list[str]:
         """Get a list of matching cities.
+
         Args:
             city: Partial city name (prefix) to search for.
             zip_code: Optional zip code to narrow the search.
+
         Returns:
             List of matching city names.
         """
-        return self._get("/getcitylist", {"city": city, "zip": zip_code})
+        res: list[str] = self._get("/getcitylist", {"city": city, "zip": zip_code})
+        return res
 
     def get_zip_list(self, zip_prefix: str, city: str | None = None) -> list[str]:
         """Get a list of matching zip codes.
+
         Args:
             zip_prefix: Partial zip code (prefix) to search for.
             city: Optional city name to narrow the search.
+
         Returns:
             List of matching zip codes.
         """
-        return self._get("/getziplist", {"zip": zip_prefix, "city": city})
+        res: list[str] = self._get("/getziplist", {"zip": zip_prefix, "city": city})
+        return res
 
     def validate_address(
         self,
@@ -141,11 +152,13 @@ class PostalAddressClient:
         city: str | None = None,
     ) -> AddressResponse:
         """Validate and normalize an address.
+
         Args:
             street: Street name of the address.
             house_number: House number of the address.
             zip_code: Zip code of the address.
             city: City name of the address.
+
         Returns:
             AddressResponse object containing the validated and normalized address.
         """
