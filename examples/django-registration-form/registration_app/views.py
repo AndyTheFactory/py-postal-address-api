@@ -36,6 +36,8 @@ class UserRegistrationView(CreateView):
 
 
 class RegistrationSuccessView(TemplateView):
+    """View for successful user registration."""
+
     template_name = "registration_app/registration_success.html"
 
 
@@ -76,12 +78,14 @@ def autocomplete_swiss_address(request: HttpRequest) -> JsonResponse:
         suggestions: list[dict[str, str]] = []
         if isinstance(results, list):
             for item in results[:10]:
-                suggestions.append({
-                    "label": item.Street,
-                    "value": item.Street,
-                    "postal_code": item.Zipcode,
-                    "city": item.City,
-                })
+                suggestions.append(
+                    {
+                        "label": item.Street,
+                        "value": item.Street,
+                        "postal_code": item.Zipcode,
+                        "city": item.City,
+                    }
+                )
 
         return JsonResponse({"results": suggestions})
 
@@ -153,11 +157,13 @@ def autocomplete_swiss_city(request: HttpRequest) -> JsonResponse:
         suggestions: list[dict[str, str]] = []
         if isinstance(results, list):
             for item in results[:10]:
-                suggestions.append({
-                    "label": str(item),
-                    "value": str(item),
-                    "postal_code": zip_code or "",
-                })
+                suggestions.append(
+                    {
+                        "label": str(item),
+                        "value": str(item),
+                        "postal_code": zip_code or "",
+                    }
+                )
 
         return JsonResponse({"results": suggestions})
     except PostalAddressError as exc:
@@ -184,22 +190,26 @@ def autocomplete_swiss_street(request: HttpRequest) -> JsonResponse:
 
         if not results and (zip_code or city):
             contextual_results = client.autocomplete(_context_query(street=query, zip_code=zip_code, city=city))
-            results = _merge_unique([
-                item.Street
-                for item in contextual_results
-                if item.Street and item.Street.lower().startswith(query.lower())
-            ])
+            results = _merge_unique(
+                [
+                    item.Street
+                    for item in contextual_results
+                    if item.Street and item.Street.lower().startswith(query.lower())
+                ]
+            )
 
         suggestions: list[dict[str, str]] = []
         if isinstance(results, list):
             for item in results[:10]:
                 street = str(item)
-                suggestions.append({
-                    "label": street,
-                    "value": street,
-                    "postal_code": zip_code or "",
-                    "city": city or "",
-                })
+                suggestions.append(
+                    {
+                        "label": street,
+                        "value": street,
+                        "postal_code": zip_code or "",
+                        "city": city or "",
+                    }
+                )
 
         return JsonResponse({"results": suggestions})
     except PostalAddressError as exc:

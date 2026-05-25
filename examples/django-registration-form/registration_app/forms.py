@@ -23,6 +23,11 @@ class UserRegistrationForm(forms.ModelForm):
     )
 
     class Meta:
+        """Meta options for the UserRegistrationForm.
+
+        Defines the model, fields, and widgets used in the form.
+        """
+
         model = User
         fields = ["email", "first_name", "last_name", "house_number", "postal_code", "city"]
         widgets = {

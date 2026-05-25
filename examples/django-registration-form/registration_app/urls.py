@@ -18,5 +18,9 @@ urlpatterns = [
     path("api/ch-address/autocomplete/", autocomplete_swiss_address, name="ch_autocomplete"),
     path("api/ch-address/autocomplete-zip/", autocomplete_swiss_zip, name="ch_autocomplete_zip"),
     path("api/ch-address/autocomplete-city/", autocomplete_swiss_city, name="ch_autocomplete_city"),
-    path("api/ch-address/autocomplete-street/", autocomplete_swiss_street, name="ch_autocomplete_street"),
+    path(
+        "api/ch-address/autocomplete-street/",
+        autocomplete_swiss_street,
+        name="ch_autocomplete_street",
+    ),
 ]

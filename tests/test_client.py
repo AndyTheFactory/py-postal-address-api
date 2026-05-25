@@ -56,12 +56,14 @@ class DummySession:
         self.calls = []
 
     def get(self, url, params=None, headers=None, timeout=None):
-        self.calls.append({
-            "url": url,
-            "params": params,
-            "headers": headers,
-            "timeout": timeout,
-        })
+        self.calls.append(
+            {
+                "url": url,
+                "params": params,
+                "headers": headers,
+                "timeout": timeout,
+            }
+        )
         return self.response
 
 
