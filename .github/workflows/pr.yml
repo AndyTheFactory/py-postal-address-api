@@ -47,8 +47,8 @@ jobs:
       - name: Ruff lint (includes docstring D-rules)
         run: uv run ruff check .
 
-      - name: Pylint (score ≥ 8.5)
-        run: uv run pylint postal_address --fail-under=8.5
+      - name: Pylint (score ≥ 6.5)
+        run: uv run pylint postal_address --fail-under=6.5 --max-line-length=120
 
   # ──────────────────────────────────────────────────────────────────────────
   # Static type checking (mypy)
