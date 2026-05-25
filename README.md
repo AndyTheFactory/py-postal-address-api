@@ -1,6 +1,6 @@
 # postal-address
 
-Python package for country-aware street/address autocomplete and validation using AddressPerfect APIs on RapidAPI.
+Python package for country-aware street/address autocomplete and validation using [AddressPerfect APIs on RapidAPI](https://rapidapi.com/search?term=AddressPerfect%20APIs&sortBy=ByAlphabetical).
 
 ## Features
 
@@ -76,13 +76,14 @@ Real-time address autocomplete for a Django user registration form:
 - Form with Swiss address fields
 - AJAX endpoint for autocomplete suggestions
 - Address validation on form submission
-- Bootstrap-styled HTML template
 
 **Quick Start:**
 ```bash
 cd examples/django-registration-form
 pip install -r requirements.txt
 # Configure RAPIDAPI_KEY, then integrate into your Django app
+export RAPIDAPI_KEY="your_key_here"
+python manage.py runserver
 ```
 
 ### 2. Batch Excel Processing
@@ -127,5 +128,4 @@ python -m uvicorn main:app --reload
 - `postal_address/` package implementation
 - `tests/` unit tests
 - `examples/` documented code examples (Django, batch Excel, FastAPI)
-- `localdebug/` functional test runners and local development utilities
 - `pyproject.toml` build and dependency config
