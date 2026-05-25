@@ -64,8 +64,68 @@ print(streets)
 uv run pytest
 ```
 
+## Examples
+
+The `examples/` directory contains fully-working code samples for common use cases. All examples focus on **Swiss addresses** (country code `ch`) to demonstrate integration patterns.
+
+### 1. Django Registration Form with Autocomplete
+
+**Location:** `examples/django-registration-form/`
+
+Real-time address autocomplete for a Django user registration form:
+- Form with Swiss address fields
+- AJAX endpoint for autocomplete suggestions
+- Address validation on form submission
+- Bootstrap-styled HTML template
+
+**Quick Start:**
+```bash
+cd examples/django-registration-form
+pip install -r requirements.txt
+# Configure RAPIDAPI_KEY, then integrate into your Django app
+```
+
+### 2. Batch Excel Processing
+
+**Location:** `examples/batch-excel-processing/`
+
+Validate customer addresses in bulk from an Excel file:
+- Reads customer data from Excel (XLSX)
+- Validates each address against the Swiss API
+- Normalizes address components (street, postal code, city)
+- Outputs results with color-coded validation status
+- Detailed error reporting
+
+**Quick Start:**
+```bash
+cd examples/batch-excel-processing
+pip install -r requirements.txt
+python create_sample_data.py
+python batch_address_validator.py sample_customers.xlsx validated_customers.xlsx
+```
+
+### 3. FastAPI Address Validation Endpoint
+
+**Location:** `examples/fastapi-validation/`
+
+REST API for Swiss address validation and autocomplete:
+- `POST /register` - Validate and register users with Swiss addresses
+- `GET /autocomplete` - Get autocomplete suggestions
+- `GET /users/{user_id}` - Retrieve stored user registrations
+- Interactive Swagger documentation at `/docs`
+
+**Quick Start:**
+```bash
+cd examples/fastapi-validation
+pip install -r requirements.txt
+python -m uvicorn main:app --reload
+# Open http://localhost:8000/docs
+```
+
 ## Package layout
 
 - `postal_address/` package implementation
 - `tests/` unit tests
+- `examples/` documented code examples (Django, batch Excel, FastAPI)
+- `localdebug/` functional test runners and local development utilities
 - `pyproject.toml` build and dependency config
