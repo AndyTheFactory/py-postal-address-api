@@ -185,6 +185,44 @@
                 }
             );
 
+            cityInput.on('blur', function() {
+                const city = $(this).val().trim();
+                if (city.length < 2 || zipInput.val().trim() !== '') {
+                    return;
+                }
+                $.get('/api/ch-address/autocomplete-zip/', { q: '', city: city }, function(data) {
+                    const results = data.results || [];
+                    if (results.length === 1) {
+                        zipInput.val(results[0].value || results[0].label);
+                        zipDropdown.empty();
+                    } else if (results.length > 1) {
+                        renderSuggestions(zipDropdown, results, function(result) {
+                            zipInput.val(result.value || result.label);
+                            zipDropdown.empty();
+                        });
+                    }
+                });
+            });
+
+            zipInput.on('blur', function() {
+                const zip = $(this).val().trim();
+                if (zip.length !== 4 || cityInput.val().trim() !== '') {
+                    return;
+                }
+                $.get('/api/ch-address/autocomplete-city/', { q: '', zip: zip }, function(data) {
+                    const results = data.results || [];
+                    if (results.length === 1) {
+                        cityInput.val(results[0].value || results[0].label);
+                        cityDropdown.empty();
+                    } else if (results.length > 1) {
+                        renderSuggestions(cityDropdown, results, function(result) {
+                            cityInput.val(result.value || result.label);
+                            cityDropdown.empty();
+                        });
+                    }
+                });
+            });
+
             $(document).on('click', function(e) {
                 if (!$(e.target).closest('.mb-3').length) {
                     zipDropdown.empty();

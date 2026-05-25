@@ -76,14 +76,12 @@ def autocomplete_swiss_address(request: HttpRequest) -> JsonResponse:
         suggestions: list[dict[str, str]] = []
         if isinstance(results, list):
             for item in results[:10]:
-                suggestions.append(
-                    {
-                        "label": item.Street,
-                        "value": item.Street,
-                        "postal_code": item.Zipcode,
-                        "city": item.City,
-                    }
-                )
+                suggestions.append({
+                    "label": item.Street,
+                    "value": item.Street,
+                    "postal_code": item.Zipcode,
+                    "city": item.City,
+                })
 
         return JsonResponse({"results": suggestions})
 
@@ -132,7 +130,7 @@ def autocomplete_swiss_city(request: HttpRequest) -> JsonResponse:
     zip_code = request.GET.get("zip", "").strip() or None
     street = request.GET.get("street", "").strip() or None
 
-    if not query or len(query) < 1:
+    if (not query or len(query) < 1) and not zip_code and not street:
         return JsonResponse({"results": []})
 
     try:
@@ -155,13 +153,11 @@ def autocomplete_swiss_city(request: HttpRequest) -> JsonResponse:
         suggestions: list[dict[str, str]] = []
         if isinstance(results, list):
             for item in results[:10]:
-                suggestions.append(
-                    {
-                        "label": str(item),
-                        "value": str(item),
-                        "postal_code": zip_code or "",
-                    }
-                )
+                suggestions.append({
+                    "label": str(item),
+                    "value": str(item),
+                    "postal_code": zip_code or "",
+                })
 
         return JsonResponse({"results": suggestions})
     except PostalAddressError as exc:
@@ -175,8 +171,7 @@ def autocomplete_swiss_street(request: HttpRequest) -> JsonResponse:
     zip_code = request.GET.get("zip", "").strip() or None
     city = request.GET.get("city", "").strip() or None
 
-    min_length = 1 if (zip_code or city) else 2
-    if not query or len(query) < min_length:
+    if not query or len(query) < 2:
         return JsonResponse({"results": []})
 
     try:
@@ -189,26 +184,22 @@ def autocomplete_swiss_street(request: HttpRequest) -> JsonResponse:
 
         if not results and (zip_code or city):
             contextual_results = client.autocomplete(_context_query(street=query, zip_code=zip_code, city=city))
-            results = _merge_unique(
-                [
-                    item.Street
-                    for item in contextual_results
-                    if item.Street and item.Street.lower().startswith(query.lower())
-                ]
-            )
+            results = _merge_unique([
+                item.Street
+                for item in contextual_results
+                if item.Street and item.Street.lower().startswith(query.lower())
+            ])
 
         suggestions: list[dict[str, str]] = []
         if isinstance(results, list):
             for item in results[:10]:
                 street = str(item)
-                suggestions.append(
-                    {
-                        "label": street,
-                        "value": street,
-                        "postal_code": zip_code or "",
-                        "city": city or "",
-                    }
-                )
+                suggestions.append({
+                    "label": street,
+                    "value": street,
+                    "postal_code": zip_code or "",
+                    "city": city or "",
+                })
 
         return JsonResponse({"results": suggestions})
     except PostalAddressError as exc:
