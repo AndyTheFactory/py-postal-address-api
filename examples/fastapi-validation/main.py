@@ -99,7 +99,7 @@ def validate_swiss_address(address: AddressData) -> AddressValidationResult:
             city=address.city,
         )
 
-        if result:
+        if result.Flag in [1, 2]:
             return AddressValidationResult(
                 status="valid",
                 normalized_street=result.Street or address.street,
@@ -113,7 +113,7 @@ def validate_swiss_address(address: AddressData) -> AddressValidationResult:
                 normalized_street=address.street,
                 normalized_postal_code=address.postal_code,
                 normalized_city=address.city,
-                message="Address could not be validated",
+                message=f"Address could not be validated: {result.FlagText}",
             )
     except PostalAddressError as exc:
         return AddressValidationResult(
@@ -229,5 +229,5 @@ if __name__ == "__main__":
     import uvicorn
 
     print("Starting Swiss Address API server...")
-    print("Open http://localhost:8000/docs for interactive documentation")
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    print("Open http://localhost:8200/docs for interactive documentation")
+    uvicorn.run(app, host="0.0.0.0", port=8200)
